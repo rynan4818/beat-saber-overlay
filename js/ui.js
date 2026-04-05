@@ -8,6 +8,44 @@ const ui = (() => {
   var mod_batteryEnergy = false;
   var obstacle_time = 0;
   var now_pp_enable = false;
+  var camera_script_author_name = "";
+  if (html_id["camera_mapper_header"]) var dom_camera_mapper_header = document.getElementById("camera_mapper_header");
+  if (html_id["camera_mapper"])       var dom_camera_mapper       = document.getElementById("camera_mapper");
+
+  function camera_script_update(data) {
+    if (typeof data.other === "undefined") return;
+    if (typeof data.other.CameraSongScript === "undefined") return;
+    if (typeof data.other.CameraSongScript.status === "undefined") {
+      camera_script_author_name = "";
+      return;
+    }
+    if (data.other.CameraSongScript.status === "songScript" || data.other.CameraSongScript.status === "commonScript") {
+      if (typeof data.other.CameraSongScript.metadata !== "undefined"
+          && typeof data.other.CameraSongScript.metadata.cameraScriptAuthorName !== "undefined") {
+        camera_script_author_name = data.other.CameraSongScript.metadata.cameraScriptAuthorName;
+      } else {
+        camera_script_author_name = "";
+      }
+    } else {
+      camera_script_author_name = "";
+    }
+  }
+
+  function camera_script_clear() {
+    camera_script_author_name = "";
+    if (html_id["camera_mapper"]) dom_camera_mapper.innerText = "";
+    if (html_id["camera_mapper_header"]) dom_camera_mapper_header.innerText = "";
+  }
+
+  function camera_script_show() {
+    if (camera_script_author_name) {
+      if (html_id["camera_mapper_header"]) dom_camera_mapper_header.innerText = " Cam: ";
+      if (html_id["camera_mapper"]) dom_camera_mapper.innerText = camera_script_author_name;
+    } else {
+      if (html_id["camera_mapper_header"]) dom_camera_mapper_header.innerText = "";
+      if (html_id["camera_mapper"]) dom_camera_mapper.innerText = "";
+    }
+  }
   
   const performance = (() => {
     const cut_energy = 1;
@@ -283,6 +321,7 @@ const ui = (() => {
         diff_time = Date.now() - data.time;
         console.log(diff_time);
       }
+      camera_script_update(data);
       now_pp_enable = false;
       timer.start(beatmap.start + diff_time, beatmap.length, mod_data.songSpeedMultiplier);
       mod_instaFail = mod_data.instaFail;
@@ -357,6 +396,7 @@ const ui = (() => {
         if (html_id["mapper"])        dom_mapper.innerText = "";
         if (html_id["mapper_footer"]) dom_mapper_footer.innerText = "";
       }
+      camera_script_show();
       
       if (html_id["difficulty"]) dom_difficulty.innerText = beatmap.difficulty;
       if (html_id["bpm"]) dom_bpm.innerText = format(beatmap.songBPM);
@@ -497,6 +537,8 @@ const ui = (() => {
       ex_show.forEach(ex => ex());
     },
     
+    camera_script_update,
+    camera_script_clear,
     performance,
     timer,
     beatmap

@@ -12,7 +12,7 @@ const check_id = ["overlay","rank","percentage","combo","score","progress","ener
                   "label_footer","label","subtitle_group","title_group","titles","bsr-group","meta",
                   "beatmap","cover_group","artist_group","artist_group","text","title_subtitle",
                   "artist_mapper_group","map_info","map_info_group","difficulty_group",
-                  "difficulty_label","artist_mapper"]
+                  "difficulty_label","artist_mapper","camera_mapper_header","camera_mapper"]
 var html_id = {};
 for (var i = 0, len = check_id.length; i < len; ++i) {
   if (document.getElementById(check_id[i]) === null) {

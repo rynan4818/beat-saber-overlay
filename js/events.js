@@ -1,6 +1,7 @@
 const events = {
   hello(data) {
     console.log("Connected to Beat Saber");
+    ui.camera_script_update(data);
     
     if (data.status.beatmap && data.status.performance) {
       ui.beatmap(data);
@@ -82,6 +83,7 @@ const events = {
   },
   
   other(data) {
+    ui.camera_script_update(data);
     ex_other.forEach(ex => ex(data));
   },
   
@@ -121,6 +123,7 @@ const events = {
   
   menu(data) {
     ui.timer.stop();
+    ui.camera_script_clear();
     if (disp_hidden) {
       ui.hide();
     }
